@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { debounce, isEmpty } from "lodash";
 import { ChangeEvent, useCallback, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -19,26 +20,35 @@ import {
 import { Clear, Info, Search, SearchOff } from "@mui/icons-material";
 import { ErrorMessage } from "@hookform/error-message";
 import { getLocationSuggestions } from "../../../controller/locations";
+
+// Type definition for location suggestions returned from API
 interface APISuggestions {
-  placeId: string;
-  mainText: string;
-  secondaryText: string;
+  placeId: string; // Unique identifier for the location
+  mainText: string; // Primary address line
+  secondaryText: string; // Secondary address details
 }
+
 const PropertyLocationAutoComplete = () => {
+  // State management
   const [loading, setLoading] = useState(false);
   const [gMapsSuggestionsArray, setGMapsSuggestionArray] = useState<
     APISuggestions[]
   >([]);
+
+  // Access form context from react-hook-form
   const {
     setValue,
     formState: { errors },
   } = useFormContext();
+
+  // Watch for changes in form fields
   const watchedSelecteTextfieldLocation = useWatch({
     name: "locationTextfieldName",
   });
   const watchedSelectedPlaceID = useWatch({ name: "placeID" });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Debounced API call to prevent excessive requests
+  // Only triggers after 500ms of user inactivity
   const debouncedFetch = useCallback(
     debounce((value: string) => {
       setLoading(true);
@@ -53,14 +63,17 @@ const PropertyLocationAutoComplete = () => {
         .finally(() => {
           setLoading(false);
         });
-    }, 500) as any,
+    }, 500),
     []
   );
 
+  // Handle user input in search field
   const handleInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const value = event.target.value;
       setValue("locationTextfieldName", value);
+
+      // Only fetch suggestions if user has typed at least 3 characters
       if (value.length >= 3) {
         setLoading(true);
         debouncedFetch(value);
@@ -71,7 +84,9 @@ const PropertyLocationAutoComplete = () => {
     [setValue, debouncedFetch]
   );
 
+  // Handle selection of a suggestion from the dropdown
   const handleSuggestionClick = useCallback((suggestion: APISuggestions) => {
+    // Update multiple form fields with selected location data
     setValue(
       "locationTextfieldName",
       `${suggestion.mainText}, ${suggestion.secondaryText}`,
@@ -80,32 +95,29 @@ const PropertyLocationAutoComplete = () => {
     setValue("placeID", suggestion.placeId, { shouldValidate: true });
     setValue("primaryAddress", suggestion.mainText);
     setValue("secondaryAddress", suggestion.secondaryText);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Clear all location-related form fields
   const handleClearInput = () => {
     setValue("locationTextfieldName", "");
-    setLoading(false);
     setValue("placeID", "");
     setValue("primaryAddress", "");
     setValue("secondaryAddress", "");
+    setLoading(false);
     setGMapsSuggestionArray([]);
   };
 
   return (
     <Grid2 size={{ xs: 12 }}>
       <Box sx={{ position: "relative" }}>
+        {/* Main search input field */}
         <TextField
           size="small"
           fullWidth
-          label={"Find your Property with its Address"}
+          label="Find your Property with its Address"
           placeholder="i.e Alexandras 122"
           value={watchedSelecteTextfieldLocation}
-          onChange={(
-            event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-          ) => {
-            handleInputChange(event);
-          }}
+          onChange={handleInputChange}
           InputProps={{
             endAdornment: (
               <>
@@ -123,6 +135,8 @@ const PropertyLocationAutoComplete = () => {
             !isEmpty(errors?.locationTextfieldName) || !isEmpty(errors?.placeID)
           }
         />
+
+        {/* Error message display */}
         {!isEmpty(errors?.locationTextfieldName) && (
           <FormHelperText error>
             <ErrorMessage name="locationTextfieldName" errors={errors} />
@@ -135,6 +149,7 @@ const PropertyLocationAutoComplete = () => {
             </FormHelperText>
           )}
 
+        {/* Suggestions dropdown - only shows when there's input and no place selected */}
         {watchedSelecteTextfieldLocation.length > 0 &&
           isEmpty(watchedSelectedPlaceID) && (
             <Paper
@@ -142,9 +157,9 @@ const PropertyLocationAutoComplete = () => {
               elevation={10}
               sx={{
                 position: "absolute",
-                top: "100%", // Position right below the TextField
+                top: "100%",
                 left: 0,
-                right: 0, // Match parent width
+                right: 0,
                 zIndex: 99,
               }}
             >
@@ -159,6 +174,7 @@ const PropertyLocationAutoComplete = () => {
                   borderTop: "none",
                 }}
               >
+                {/* Loading state */}
                 {loading ? (
                   <ListItem
                     sx={{
@@ -179,6 +195,7 @@ const PropertyLocationAutoComplete = () => {
                     ))}
                   </ListItem>
                 ) : watchedSelecteTextfieldLocation.length < 3 ? (
+                  // Message when input is too short
                   <ListItem>
                     <Info sx={{ mr: 1, color: "primary.main" }} />
                     <ListItemText
@@ -192,6 +209,7 @@ const PropertyLocationAutoComplete = () => {
                     />
                   </ListItem>
                 ) : gMapsSuggestionsArray.length > 0 ? (
+                  // List of suggestions
                   gMapsSuggestionsArray.map((suggestion, index) => (
                     <ListItemButton
                       key={index}
@@ -218,6 +236,7 @@ const PropertyLocationAutoComplete = () => {
                     </ListItemButton>
                   ))
                 ) : (
+                  // No results found message
                   <ListItem>
                     <SearchOff sx={{ mr: 1 }} />
                     <ListItemText
@@ -232,4 +251,5 @@ const PropertyLocationAutoComplete = () => {
     </Grid2>
   );
 };
+
 export default PropertyLocationAutoComplete;

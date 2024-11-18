@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllAds, saveAdInDB } from "../../controller/ads";
 import { createAndSaveAd } from "../../models/types/payloads";
 
+// Thunk to fetch all ads
 export const getAllAdsThunk = createAsyncThunk(
   "ads/getAllAds",
   async (_, { rejectWithValue }) => {
@@ -18,6 +19,7 @@ export const getAllAdsThunk = createAsyncThunk(
   }
 );
 
+// Thunk to save a new ad
 export const saveAdInDBThunk = createAsyncThunk(
   "ads/saveAdInDB",
   async (payload: createAndSaveAd, { rejectWithValue }) => {

@@ -1,3 +1,4 @@
+// Form and Material-UI imports
 import {
   useFormContext,
   Controller,
@@ -6,6 +7,7 @@ import {
 } from "react-hook-form";
 import { TextField, TextFieldProps } from "@mui/material";
 
+// Component props interface
 interface IProps {
   name: string;
   clearErrorsOnChange?: boolean;
@@ -24,17 +26,22 @@ export default function RHFTextField({
 }: IProps & TextFieldProps) {
   const { control, clearErrors } = useFormContext();
 
+  // Handle input changes based on type
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     field: ControllerRenderProps<FieldValues, string>
   ) => {
+    // Convert to number if type is number, otherwise use string value
     type === "number"
       ? field.onChange(parseInt(e.target.value) || 0)
       : field.onChange(e.target.value);
+
+    // Clear field errors if enabled and has value
     if (clearErrorsOnChange && e.target.value) {
       clearErrors(name);
     }
   };
+
   return (
     <Controller
       name={name}
@@ -47,7 +54,6 @@ export default function RHFTextField({
           type={type}
           error={!!error}
           helperText={allowError ? error?.message : undefined}
-          // Disables value changes on scroll for numeric inputs
           onWheel={(event: any) => type === "number" && event.target.blur()}
           onChange={(e) => handleChange(e, field)}
           {...other}

@@ -6,14 +6,18 @@ import {
   selectCreateIsLoading,
 } from "../../../store/user-ads/slice";
 
+// Modal for confirming ad creation with loading state and error handling
 interface ConfirmModalProps {
   open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
+  onClose: () => void; // Handler for closing modal
+  onConfirm: () => void; // Handler for confirming action
 }
+
 const ConfirmModal = ({ open, onClose, onConfirm }: ConfirmModalProps) => {
+  // Get loading and error states from redux
   const createLoading = useSelector(selectCreateIsLoading);
   const error = useSelector(selectCreateIsError);
+
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="confirm-modal-title">
       <Box
@@ -26,7 +30,7 @@ const ConfirmModal = ({ open, onClose, onConfirm }: ConfirmModalProps) => {
           boxShadow: 24,
           p: 4,
           width: 400,
-          maxWidth: "90%",
+          maxWidth: "90%", // Responsive width
           borderRadius: 1,
         }}
       >
@@ -34,6 +38,8 @@ const ConfirmModal = ({ open, onClose, onConfirm }: ConfirmModalProps) => {
           Confirm Ad Creation
         </Typography>
         <Typography mb={3}>Are you sure you want to create this ad?</Typography>
+
+        {/* Action buttons */}
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
           <Button onClick={onClose} variant="outlined">
             Cancel
@@ -47,8 +53,8 @@ const ConfirmModal = ({ open, onClose, onConfirm }: ConfirmModalProps) => {
           </LoadingButton>
         </Box>
 
+        {/* Error message */}
         {error && (
-          // This might appear if the server is down
           <FormHelperText error>
             There was an error while saving you ad please try again later
           </FormHelperText>
@@ -57,4 +63,5 @@ const ConfirmModal = ({ open, onClose, onConfirm }: ConfirmModalProps) => {
     </Modal>
   );
 };
+
 export default ConfirmModal;

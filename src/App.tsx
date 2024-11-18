@@ -8,9 +8,14 @@ import { store } from "./store/store";
 
 function App() {
   return (
+    // Provide Redux store to the app
     <Provider store={store}>
+      {/* Set up routing */}
       <BrowserRouter>
+        {/* Navigation bar shown on all pages */}
         <Navbar />
+
+        {/* Define routes */}
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/create-ad" element={<CreateAdPage />} />

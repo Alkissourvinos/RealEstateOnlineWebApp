@@ -2,6 +2,7 @@ import { AppBar, Box, Toolbar, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Home } from "@mui/icons-material";
 
+// Simple navigation bar with home icon button that redirects to root route
 export default function Navbar() {
   const navigate = useNavigate();
 

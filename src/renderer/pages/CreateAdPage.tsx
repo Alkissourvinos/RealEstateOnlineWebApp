@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { createAnAdForm } from "../../models/types";
 import CreateAdMain from "../components/CreateAdMain";
 const CreateAdPage = () => {
+  // Form validation schema
   const validationSchema = Yup.object().shape({
     title: Yup.string()
       .required("Title is required")
@@ -110,7 +111,7 @@ const CreateAdPage = () => {
       }),
     }),
   }) as Yup.ObjectSchema<createAnAdForm>;
-
+  // Initialize form with validation and default values
   const methods = useForm<createAnAdForm>({
     resolver: yupResolver<createAnAdForm>(validationSchema),
     defaultValues: {

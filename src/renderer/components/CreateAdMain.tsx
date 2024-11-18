@@ -47,6 +47,7 @@ import { useAppDispatch } from "../../store/store";
 import { saveAdInDBThunk } from "../../store/user-ads/operations";
 import { onSetCreateLoading } from "../../store/user-ads/slice";
 
+// Component for creating real estate advertisements with form validation and submission
 const CreateAdMain = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -54,28 +55,26 @@ const CreateAdMain = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState<createAndSaveAd | null>(null);
 
-  const watchedFromHour = useWatch({
-    name: "contactInfo.contactHoursFrom",
-  });
+  // Watch form fields for contact hours to filter available times
+  const watchedFromHour = useWatch({ name: "contactInfo.contactHoursFrom" });
+  const watchedToHour = useWatch({ name: "contactInfo.contactHoursTo" });
 
-  const watchedToHour = useWatch({
-    name: "contactInfo.contactHoursTo",
-  });
-
+  // Filter available hours based on selection
   const getFilteredHours = (isFrom: boolean) => {
     const hours = Object.values(hoursMapper);
-
     if (isFrom) {
       return watchedToHour
         ? hours.filter((hour) => hour < watchedToHour)
         : hours;
     } else {
+      //From Hour cannot be before to hour
       return watchedFromHour
         ? hours.filter((hour) => hour > watchedFromHour)
         : hours;
     }
   };
 
+  // Handle form submission
   const handleCreateAd: SubmitHandler<createAnAdForm> = (data) => {
     const payload: createAndSaveAd = {
       title: data.title,
@@ -108,18 +107,17 @@ const CreateAdMain = () => {
     setIsModalOpen(true);
   };
 
+  // Handle confirmation and save ad
   const handleConfirm = async () => {
     if (formData) {
       try {
         dispatch(onSetCreateLoading(true));
-
         const response = await dispatch(saveAdInDBThunk(formData));
         if (response?.payload?.success === true) {
           setIsModalOpen(false);
           navigate("/");
         }
       } catch (error: any) {
-        // Handle error
         throw new Error(error);
       }
     }
@@ -135,6 +133,7 @@ const CreateAdMain = () => {
         p: "0.5rem",
       }}
     >
+      {/* Title Section */}
       <Grid2 container sx={{ mb: "0.5rem" }}>
         <span
           style={{
@@ -149,6 +148,8 @@ const CreateAdMain = () => {
           Title
         </Typography>
       </Grid2>
+
+      {/* Title Input Section */}
       <Grid2 container sx={{ my: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -168,6 +169,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
+      {/* Property Location Section */}
       <Grid2 container sx={{ mb: "0.5rem" }}>
         <span
           style={{
@@ -182,6 +185,8 @@ const CreateAdMain = () => {
           Property Location
         </Typography>
       </Grid2>
+
+      {/* Location Autocomplete Section */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -194,13 +199,17 @@ const CreateAdMain = () => {
           <PropertyLocationAutoComplete />
         </Grid2>
       </Grid2>
+
       <Divider />
+
+      {/* General Property Info Section */}
       <Grid2 container sx={{ my: "0.5rem" }}>
         <Typography variant="body1" sx={{ fontWeight: "bold" }}>
           General Property Info
         </Typography>
       </Grid2>
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Ad Type Selection */}
       <Grid2 container>
         <Grid2 size={{ xs: 7 }}>
           <DynamicSelect
@@ -213,6 +222,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
+      {/* Property Category and Condition */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -240,8 +251,10 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
       <Divider />
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Floors Section */}
       <Grid2 container sx={{ my: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -258,8 +271,10 @@ const CreateAdMain = () => {
           </Grid2>
         </Grid2>
       </Grid2>
+
       <Divider />
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Price and Zoning Section */}
       <Grid2 container sx={{ my: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -288,13 +303,17 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
       <Divider />
+
+      {/* Additional Property Features Section */}
       <Grid2 container sx={{ my: "0.5rem" }}>
         <Typography variant="body1" sx={{ fontWeight: "bold" }}>
           Additional Property features
         </Typography>
       </Grid2>
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Property Area */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2 size={{ xs: 7 }}>
           <DynamicTextInput
@@ -308,7 +327,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Construction and Renovation Dates */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -337,7 +357,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Bedrooms Section */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -366,7 +387,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Bathrooms Section */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -395,7 +417,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Energy Class Section */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2
           size={{ xs: 7 }}
@@ -415,6 +438,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
+      {/* Property Description */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2 size={{ xs: 7 }}>
           <DynamicTextInput
@@ -429,13 +454,17 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
       <Divider />
-      {/* ----------------/////////////////// ------------------------------- */}
+
+      {/* Contact Information Section */}
       <Grid2 container sx={{ my: "0.5rem" }}>
         <Typography variant="body1" sx={{ fontWeight: "bold" }}>
           Contact Information
         </Typography>
       </Grid2>
+
+      {/* Email Contact */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2 size={{ xs: 7 }}>
           <DynamicTextInput
@@ -448,6 +477,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
+      {/* Phone Contact */}
       <Grid2 container sx={{ mb: "1rem" }}>
         <Grid2 size={{ xs: 7 }}>
           <DynamicTextInput
@@ -460,6 +491,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
+      {/* Contact Hours Section */}
       <HeaderWithIcon
         headerLabel="Contact Hours"
         headerIcon={<WatchLater sx={{ color: "primary.main" }} />}
@@ -488,6 +521,8 @@ const CreateAdMain = () => {
           />
         </Grid2>
       </Grid2>
+
+      {/* Action Buttons */}
       <Grid2 container sx={{ justifyContent: "space-between", mb: "0.3rem" }}>
         <Button
           variant="outlined"
@@ -506,6 +541,8 @@ const CreateAdMain = () => {
           Create and Save Ad
         </Button>
       </Grid2>
+
+      {/* Confirmation Modal */}
       <ConfirmModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}

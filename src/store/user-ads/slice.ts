@@ -7,6 +7,7 @@ import { getAllAdsThunk, saveAdInDBThunk } from "./operations";
 import { Ad } from "../../models/types";
 import { RootState } from "../store";
 
+// Define state interface
 interface userAdsState {
   ads: EntityState<Ad, number> & {
     isLoading: boolean;
@@ -18,8 +19,10 @@ interface userAdsState {
   };
 }
 
+// Create entity adapter for ads
 const adsAdapter = createEntityAdapter<Ad>();
 
+// Initial state
 const initialState: userAdsState = {
   ads: adsAdapter.getInitialState({
     isLoading: false,
@@ -31,6 +34,7 @@ const initialState: userAdsState = {
   }),
 };
 
+// Create slice
 const adsSlice = createSlice({
   name: "ads",
   initialState,
@@ -44,6 +48,7 @@ const adsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Handle getAllAdsThunk states
       .addCase(getAllAdsThunk.pending, (state) => {
         state.ads.isLoading = true;
       })
@@ -52,14 +57,16 @@ const adsSlice = createSlice({
         adsAdapter.addMany(state.ads, ads);
         state.ads.isLoading = false;
       })
-      .addCase(getAllAdsThunk.rejected, (state, action) => {
+      .addCase(getAllAdsThunk.rejected, (state) => {
         state.ads.isLoading = false;
       })
 
+      // Handle saveAdInDBThunk states
       .addCase(saveAdInDBThunk.fulfilled, (state, action) => {
         const { adId, createdAt, locationId } = action.payload;
         const payload = action.payload.payload;
 
+        // Create new ad object
         const newAd: Ad = {
           id: adId,
           title: payload.title,
@@ -90,17 +97,19 @@ const adsSlice = createSlice({
             secondaryAddress: payload.secondaryAddress,
           },
         };
+
         adsAdapter.addOne(state.ads, newAd);
         state.ads.createIsLoading = false;
         state.ads.creatingAdError = false;
       })
-      .addCase(saveAdInDBThunk.rejected, (state, action) => {
+      .addCase(saveAdInDBThunk.rejected, (state) => {
         state.ads.createIsLoading = false;
         state.ads.creatingAdError = true;
       });
   },
 });
 
+// Selectors
 export const selectCreateIsLoading = (state: RootState) =>
   state.ads.ads.createIsLoading;
 
@@ -113,6 +122,7 @@ export const selectDisplayedAd = (state: RootState) =>
 export const { selectAll: selectAllAds, selectById: selectAdByID } =
   adsAdapter.getSelectors((state: RootState) => state.ads.ads);
 
+// Export actions and reducer
 export const { onSetCreateLoading, onSetCurrentDisplayingAd } =
   adsSlice.actions;
 

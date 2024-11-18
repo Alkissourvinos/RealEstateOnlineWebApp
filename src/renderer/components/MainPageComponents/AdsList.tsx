@@ -1,3 +1,4 @@
+// Import necessary Material-UI components and icons
 import {
   List,
   ListItemText,
@@ -20,7 +21,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useNavigate } from "react-router-dom";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns"; // For time-ago formatting
 import { useSelector } from "react-redux";
 import {
   onSetCurrentDisplayingAd,
@@ -30,16 +31,24 @@ import {
 } from "../../../store/user-ads/slice";
 import { RootState, useAppDispatch } from "../../../store/store";
 
+/**
+ * Component representing a single advertisement item in the list
+ * @param adId - The ID of the advertisement to display
+ */
 const AdListItem = ({ adId }: { adId: number }) => {
+  // Get ad details from Redux store
   const ad = useSelector((state: RootState) => selectAdByID(state, adId));
   const dispatch = useAppDispatch();
   const currentlyDisplayedAdID = useSelector(selectDisplayedAd);
 
+  // Handle click event to display selected ad
   const handleClick = () => {
     dispatch(onSetCurrentDisplayingAd(adId));
   };
 
+  // Don't render if ad doesn't exist
   if (!ad) return null;
+
   return (
     <ListItemButton
       divider
@@ -48,6 +57,7 @@ const AdListItem = ({ adId }: { adId: number }) => {
     >
       <ListItemText
         primary={
+          // Ad title with custom styling
           <Typography
             component="span"
             variant="body1"
@@ -59,9 +69,11 @@ const AdListItem = ({ adId }: { adId: number }) => {
         }
         secondary={
           <>
+            {/* Address information */}
             <Typography component="span" variant="body2" color="text.primary">
               {`${ad.location.primaryAddress}, ${ad.location.secondaryAddress}`}
             </Typography>
+            {/* Creation time in "time ago" format */}
             <Typography
               component="span"
               variant="body2"
@@ -81,6 +93,10 @@ const AdListItem = ({ adId }: { adId: number }) => {
   );
 };
 
+/**
+ * Main component for displaying the list of advertisements
+ * Includes responsive design for mobile and desktop views
+ */
 const AdsList = () => {
   const navigate = useNavigate();
   const ads = useSelector(selectAllAds);
@@ -91,6 +107,7 @@ const AdsList = () => {
     currentlyDisplayedAdID ? selectAdByID(state, currentlyDisplayedAdID) : null
   );
 
+  // Header component with title and add button
   const header = (
     <Stack spacing={1} sx={{ width: "100%" }}>
       <Box
@@ -106,6 +123,7 @@ const AdsList = () => {
         >
           Your Advertisements
         </Typography>
+        {/* Show add button only if there are existing ads */}
         {ads.length !== 0 && (
           <Tooltip title="Create more ads" arrow placement="top">
             <IconButton
@@ -118,6 +136,7 @@ const AdsList = () => {
           </Tooltip>
         )}
       </Box>
+      {/* Mobile-specific selected ad indicator */}
       {isMobile && selectedAd && (
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Typography variant="body2" color="text.secondary">
@@ -135,9 +154,11 @@ const AdsList = () => {
     </Stack>
   );
 
+  // Main content component with list of ads or create button
   const content = (
     <>
       {ads.length === 0 ? (
+        // Show create button if no ads exist
         <Box
           sx={{
             display: "flex",
@@ -155,11 +176,13 @@ const AdsList = () => {
           </Button>
         </Box>
       ) : (
+        // Display list of existing ads
         ads.map((ad) => <AdListItem key={ad.id} adId={ad.id} />)
       )}
     </>
   );
 
+  // Mobile layout using Accordion
   if (isMobile) {
     return (
       <Paper
@@ -202,6 +225,7 @@ const AdsList = () => {
     );
   }
 
+  // Desktop layout using List
   return (
     <Paper
       elevation={4}

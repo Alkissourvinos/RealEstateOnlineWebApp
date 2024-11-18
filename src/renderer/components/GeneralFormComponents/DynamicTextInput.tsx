@@ -4,18 +4,19 @@ import { ResponsiveSize } from "../../../models/types";
 import RHFTextField from "../RHFTextfield";
 import HeaderWithIcon from "./HeaderWithIcon";
 
+// Props for configurable text input with optional header
 type Props = {
-  headerLabel?: string;
-  headerIcon?: ReactNode;
-  name: string;
-  textfieldLabel?: string;
-  placeholderText?: string;
-  customSize: ResponsiveSize | GridSize;
-  type?: "text" | "number";
-  multiLine?: boolean;
-  rows?: number;
-  maxRows?: number;
-  sx?: SxProps;
+  headerLabel?: string; // Optional label above input
+  headerIcon?: ReactNode; // Optional icon next to header
+  name: string; // Form field name
+  textfieldLabel?: string; // Label for input field
+  placeholderText?: string; // Placeholder text
+  customSize: ResponsiveSize | GridSize; // Control width of container
+  type?: "text" | "number"; // Input type
+  multiLine?: boolean; // Enable multiline input
+  rows?: number; // Fixed number of rows
+  maxRows?: number; // Maximum rows for multiline
+  sx?: SxProps; // Additional styles
 };
 
 const DynamicTextInput = ({
@@ -33,6 +34,7 @@ const DynamicTextInput = ({
 }: Props) => {
   return (
     <Grid2 size={customSize} sx={{ mb: "0.5rem", ...sx }}>
+      {/* Optional header with icon */}
       {headerLabel && (
         <HeaderWithIcon headerLabel={headerLabel} headerIcon={headerIcon} />
       )}
@@ -45,9 +47,10 @@ const DynamicTextInput = ({
           size="small"
           fullWidth
           multiline={multiLine}
-          {...(rows ? { rows: rows } : { maxRows: maxRows })}
+          {...(rows ? { rows } : { maxRows })} // Set either fixed or max rows
           type={type}
           InputProps={{
+            // Add min/step props for number inputs
             ...(type === "number" && {
               inputProps: {
                 min: 0,

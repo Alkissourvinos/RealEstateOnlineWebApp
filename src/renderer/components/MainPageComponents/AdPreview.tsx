@@ -8,6 +8,7 @@ import {
   Grid2,
 } from "@mui/material";
 
+// Import Material-UI icons for various property features
 import {
   Category,
   Stairs,
@@ -27,11 +28,18 @@ import {
   WatchLater,
   Brush,
 } from "@mui/icons-material";
+
+// Redux imports for state management
 import { useSelector } from "react-redux";
 import { selectAdByID, selectDisplayedAd } from "../../../store/user-ads/slice";
 import { RootState } from "../../../store/store";
 import { Ad } from "../../../models/types";
 
+/**
+ * Helper function to organize ad data into structured sections
+ * @param ad - The advertisement object containing all property details
+ * @returns An array of sections, each containing related property information
+ */
 const createDataRows = (ad: Ad) => [
   {
     section: "Location Details",
@@ -39,6 +47,7 @@ const createDataRows = (ad: Ad) => [
       {
         icon: <Map color="primary" />,
         label: "Address",
+        // Combines primary and secondary address, filtering out empty values
         value: [ad?.location?.primaryAddress, ad?.location?.secondaryAddress]
           .filter(Boolean)
           .join(", "),
@@ -50,6 +59,7 @@ const createDataRows = (ad: Ad) => [
       },
     ],
   },
+  // Property Details section with basic property information
   {
     section: "Property Details",
     items: [
@@ -76,6 +86,7 @@ const createDataRows = (ad: Ad) => [
       {
         icon: <SquareFoot color="primary" />,
         label: "Size",
+        // Adds m² unit to size if available
         value: ad?.propertysize ? `${ad.propertysize} m²` : null,
       },
       {
@@ -90,6 +101,7 @@ const createDataRows = (ad: Ad) => [
       },
     ],
   },
+  // Room Information section detailing bedroom and bathroom counts
   {
     section: "Room Information",
     items: [
@@ -108,9 +120,14 @@ const createDataRows = (ad: Ad) => [
         label: "Bathrooms",
         value: ad?.bathrooms,
       },
-      { icon: <Wc color="primary" />, label: "WC", value: ad?.WC },
+      {
+        icon: <Wc color="primary" />,
+        label: "WC",
+        value: ad?.WC,
+      },
     ],
   },
+  // Additional Information section with price and other details
   {
     section: "Additional Information",
     items: [
@@ -122,6 +139,7 @@ const createDataRows = (ad: Ad) => [
       {
         icon: <CreditCard color="primary" />,
         label: "Price",
+        // Adds € symbol to price if available
         value: ad?.price ? `${ad.price} €` : null,
       },
       {
@@ -136,6 +154,7 @@ const createDataRows = (ad: Ad) => [
       },
     ],
   },
+  // Contact Information section with seller details
   {
     section: "Contact Information",
     items: [
@@ -152,6 +171,7 @@ const createDataRows = (ad: Ad) => [
       {
         icon: <WatchLater color="primary" />,
         label: "Contact Hours",
+        // Combines contact hours if both from and to times are available
         value:
           ad?.contactHoursFrom && ad?.contactHoursTo
             ? `${ad.contactHoursFrom} - ${ad.contactHoursTo}`
@@ -161,6 +181,12 @@ const createDataRows = (ad: Ad) => [
   },
 ];
 
+/**
+ * Component to render individual data rows with icons and values
+ * @param icon - Material-UI icon component
+ * @param label - Label text for the data field
+ * @param value - Value to be displayed
+ */
 const DataRow = ({
   icon,
   label,
@@ -170,10 +196,12 @@ const DataRow = ({
   label: string;
   value: string | number | null;
 }) => {
+  // Skip rendering if value is null or undefined
   if (value === null || value === undefined) return null;
 
   return (
     <Grid2 container spacing={2} sx={{ mb: 2 }}>
+      {/* Label and icon container */}
       <Grid2
         size={{ xs: 5, sm: 5 }}
         sx={{
@@ -189,12 +217,14 @@ const DataRow = ({
           </Typography>
         </Box>
       </Grid2>
+      {/* Vertical divider - hidden on mobile */}
       <Grid2
         size={{ xs: 5, sm: 1 }}
         sx={{ display: { xs: "none", sm: "block" } }}
       >
         <Divider orientation="vertical" />
       </Grid2>
+      {/* Value container */}
       <Grid2 size={{ xs: 5, sm: 6 }}>
         <Typography noWrap={label === "Place ID" ? true : false}>
           {value}
@@ -204,14 +234,22 @@ const DataRow = ({
   );
 };
 
+/**
+ * Main component for displaying property advertisement details
+ * Includes responsive layout and fallback UI when no ad is selected
+ */
 const AdPreview = () => {
+  // Get currently selected ad from Redux store
   const currentlyDisplayedAdID = useSelector(selectDisplayedAd);
   const selectedAd = useSelector((state: RootState) =>
     selectAdByID(state, currentlyDisplayedAdID as number)
   );
+
+  // Theme and responsive handling
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  // Fallback UI when no ad is selected
   if (!selectedAd) {
     return (
       <Paper
@@ -241,8 +279,10 @@ const AdPreview = () => {
     );
   }
 
+  // Generate data rows from selected ad
   const dataRows = createDataRows(selectedAd);
 
+  // Main component render
   return (
     <Paper
       sx={{
@@ -253,6 +293,7 @@ const AdPreview = () => {
         height: "calc(80vh )",
       }}
     >
+      {/* Ad title */}
       <Typography
         variant="h6"
         sx={{ fontWeight: "bolder", color: "text.primary" }}
@@ -262,7 +303,9 @@ const AdPreview = () => {
 
       <Divider sx={{ mb: "1rem", mt: "0.5rem" }} />
 
+      {/* Main content container */}
       <Box sx={{ px: isMobile ? 0 : 2 }}>
+        {/* Map through each section and render its items */}
         {dataRows.map((section, index) => (
           <Box key={index}>
             <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
@@ -276,6 +319,7 @@ const AdPreview = () => {
                 value={item.value}
               />
             ))}
+            {/* Add divider between sections except for the last one */}
             {index < dataRows.length - 1 && <Divider sx={{ my: 2 }} />}
           </Box>
         ))}

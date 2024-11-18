@@ -1,3 +1,4 @@
+// UI and state management imports
 import { Card, Container, Grid2, Typography } from "@mui/material";
 import { PaperBackGroundColor } from "../../models/Theme/customPallete";
 import { getAllAdsThunk } from "../../store/user-ads/operations";
@@ -8,6 +9,8 @@ import AdPreview from "../components/MainPageComponents/AdPreview";
 
 const MainPage = () => {
   const dispatch = useAppDispatch();
+
+  // Fetch ads on component mount
   useEffect(() => {
     dispatch(getAllAdsThunk());
   }, [dispatch]);
@@ -27,8 +30,8 @@ const MainPage = () => {
           backgroundColor: PaperBackGroundColor.paper,
           display: "flex",
           flexDirection: {
-            xs: "column",
-            md: "row",
+            xs: "column", // Stack on mobile
+            md: "row", // Side by side on desktop
           },
         }}
       >
