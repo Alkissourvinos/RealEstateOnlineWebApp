@@ -48,10 +48,10 @@ The application emphasizes clean code organization while maintaining high perfor
 - Contact details
 
 ## Bonus Points
-- ✨ Fully responsive design optimized for mobile devices
+- ✨ Many attributes for each to differentiate the ad from others 
 - 🔄 Direct database communication for real-time data
 - 🎨 Polished UI with Material-UI components
-- 📱 Mobile-friendly approach
+- 📱  Fully responsive design optimized for mobile devices
 - 🏗️ Scalable architecture
 
 ## Technical Notes
@@ -96,7 +96,7 @@ const isCacheValid = (entry: CacheEntry): boolean => {
   return (now - entry.timestamp) < CACHE_EXPIRY;
 };
 ```
-This caching system would significantly reduce API calls. Implementation was postponed because I could not get it working with the available time I have in my day to day
+This caching system would significantly reduce API calls. Implementation was postponed due to current time constraints with my day-to-day schedule.
 
 ## Database Integration
 Communicates with a dedicated API for:
