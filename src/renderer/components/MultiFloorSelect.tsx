@@ -38,7 +38,6 @@ const MultiFloorSelect = () => {
                 <Chip
                   key={index}
                   label={option}
-                  //   {...getTagProps({ index })}
                   size="small"
                   sx={{ mx: "0.4rem" }}
                 />

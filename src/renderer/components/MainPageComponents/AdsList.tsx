@@ -1,4 +1,3 @@
-// components/AdsList/AdsList.tsx
 import {
   List,
   ListItemText,

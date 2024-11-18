@@ -1,14 +1,10 @@
-// form
 import {
   useFormContext,
   Controller,
   ControllerRenderProps,
   FieldValues,
 } from "react-hook-form";
-// @mui
 import { TextField, TextFieldProps } from "@mui/material";
-
-// ----------------------------------------------------------------------
 
 interface IProps {
   name: string;

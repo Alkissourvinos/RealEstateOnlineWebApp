@@ -44,21 +44,10 @@ const adsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // .addCase(getAllAdsForUserIDThunk.pending, (state) => {
-      //   state.ads.isLoading = true;
-      // })
-      // .addCase(getAllAdsForUserIDThunk.fulfilled, (state, action) => {
-      //   state.ads.isLoading = false;
-      //   // adsAdapter.setAll(state.ads, action.payload.ads);
-      // })
-      // .addCase(getAllAdsForUserIDThunk.rejected, (state) => {
-      //   state.ads.isLoading = false;
-      // })
       .addCase(getAllAdsThunk.pending, (state) => {
         state.ads.isLoading = true;
       })
       .addCase(getAllAdsThunk.fulfilled, (state, action) => {
-        // console.log("In slice", );
         const { ads } = action.payload;
         adsAdapter.addMany(state.ads, ads);
         state.ads.isLoading = false;

@@ -1,22 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllAds, saveAdInDB } from "../../controller/ads";
-import {
-  createAndSaveAd,
-  getAdsByUserIDPayload,
-} from "../../models/types/payloads";
-
-// Thunk action
-export const getAllAdsForUserIDThunk = createAsyncThunk(
-  "ads/GetAllAdsForUserID",
-  async (payload: getAdsByUserIDPayload) => {
-    try {
-      const response = {};
-      return response;
-    } catch (e) {
-      console.log("errror in op", e);
-    }
-  }
-);
+import { createAndSaveAd } from "../../models/types/payloads";
 
 export const getAllAdsThunk = createAsyncThunk(
   "ads/getAllAds",

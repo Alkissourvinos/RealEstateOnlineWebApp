@@ -1,4 +1,3 @@
-// components/Navbar.tsx
 import { AppBar, Box, Toolbar, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Home } from "@mui/icons-material";
