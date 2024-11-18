@@ -11,6 +11,7 @@ interface userAdsState {
   ads: EntityState<Ad, number> & {
     isLoading: boolean;
     currentAd: number | null;
+    currentDisplayedAd: number | null;
     adBeingEdited: number | null;
     createIsLoading: boolean;
     creatingAdError: boolean;
@@ -23,6 +24,7 @@ const initialState: userAdsState = {
   ads: adsAdapter.getInitialState({
     isLoading: false,
     currentAd: null,
+    currentDisplayedAd: null,
     adBeingEdited: null,
     createIsLoading: false,
     creatingAdError: false,
@@ -35,6 +37,9 @@ const adsSlice = createSlice({
   reducers: {
     onSetCreateLoading(state, { payload }) {
       state.ads.createIsLoading = payload;
+    },
+    onSetCurrentDisplayingAd(state, { payload }) {
+      state.ads.currentDisplayedAd = payload;
     },
   },
   extraReducers: (builder) => {
@@ -113,9 +118,13 @@ export const selectCreateIsLoading = (state: RootState) =>
 export const selectCreateIsError = (state: RootState) =>
   state.ads.ads.creatingAdError;
 
+export const selectDisplayedAd = (state: RootState) =>
+  state.ads.ads.currentDisplayedAd;
+
 export const { selectAll: selectAllAds, selectById: selectAdByID } =
   adsAdapter.getSelectors((state: RootState) => state.ads.ads);
 
-export const { onSetCreateLoading } = adsSlice.actions;
+export const { onSetCreateLoading, onSetCurrentDisplayingAd } =
+  adsSlice.actions;
 
 export default adsSlice.reducer;

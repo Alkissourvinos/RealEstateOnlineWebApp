@@ -1,7 +1,10 @@
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, FormHelperText, Modal, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { selectCreateIsLoading } from "../../../store/user-ads/slice";
+import {
+  selectCreateIsError,
+  selectCreateIsLoading,
+} from "../../../store/user-ads/slice";
 
 interface ConfirmModalProps {
   open: boolean;
@@ -10,7 +13,7 @@ interface ConfirmModalProps {
 }
 const ConfirmModal = ({ open, onClose, onConfirm }: ConfirmModalProps) => {
   const createLoading = useSelector(selectCreateIsLoading);
-
+  const error = useSelector(selectCreateIsError);
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="confirm-modal-title">
       <Box
@@ -43,6 +46,13 @@ const ConfirmModal = ({ open, onClose, onConfirm }: ConfirmModalProps) => {
             Confirm
           </LoadingButton>
         </Box>
+
+        {error && (
+          // This might appear if the server is down
+          <FormHelperText error>
+            There was an error while saving you ad please try again later
+          </FormHelperText>
+        )}
       </Box>
     </Modal>
   );

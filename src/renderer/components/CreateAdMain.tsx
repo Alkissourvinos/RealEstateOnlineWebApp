@@ -20,11 +20,11 @@ import {
   Description,
   EnergySavingsLeaf,
   Engineering,
-  Layers,
   Map,
   ShareLocation,
   Shower,
   SquareFoot,
+  Stairs,
   Title,
   WatchLater,
 } from "@mui/icons-material";
@@ -117,12 +117,10 @@ const CreateAdMain = () => {
         if (response?.payload?.success === true) {
           setIsModalOpen(false);
           navigate("/");
-        } else {
-          console.log("error");
         }
-      } catch (error) {
+      } catch (error: any) {
         // Handle error
-        console.error("in form", error);
+        throw new Error(error);
       }
     }
   };
@@ -254,7 +252,7 @@ const CreateAdMain = () => {
           <Grid2 size={{ xs: 12, md: 12 }}>
             <HeaderWithIcon
               headerLabel="Floors"
-              headerIcon={<Layers sx={{ color: "primary.main" }} />}
+              headerIcon={<Stairs sx={{ color: "primary.main" }} />}
             />
             <MultiFloorSelect />
           </Grid2>
